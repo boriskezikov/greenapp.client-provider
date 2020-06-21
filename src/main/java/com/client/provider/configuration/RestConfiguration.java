@@ -19,14 +19,13 @@ public class RestConfiguration {
 
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
-        return builder -> {
+        return builder ->
             builder.simpleDateFormat(dateTimeFormat)
                 .serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(dateFormat)))
                 .serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(dateTimeFormat)))
                 .deserializers(new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(dateTimeFormat)))
                 .deserializers(new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(dateTimeFormat)))
                 .serializationInclusion(Include.NON_NULL);
-        };
     }
 
     @Bean

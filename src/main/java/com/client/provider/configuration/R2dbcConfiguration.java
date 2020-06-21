@@ -40,7 +40,7 @@ public class R2dbcConfiguration {
             .host(properties.host)
             .port(properties.port)
             .database(properties.database)
-            .applicationName("task-manager")
+            .applicationName("client-provider")
             .username(properties.username)
             .password(properties.password)
             .build();
