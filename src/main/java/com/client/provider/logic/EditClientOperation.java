@@ -46,7 +46,7 @@ public class EditClientOperation {
                 var attach = request.attachPhotoRequest.asMono()
                     .flatMap(a -> r2dbcAdapter.attach(h, a));
                 var sendEvent = kafkaAdapter.sendEvent(new Event("ClientUpdated", id));
-                return Mono.when(updateClient, detach, attach);
+                return Mono.when(updateClient, detach, attach, sendEvent);
             }))
             .as(logProcess(log, "EditClientOperation", request));
     }

@@ -1,20 +1,20 @@
 package com.client.provider.service.kafka;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.kafka.sender.KafkaSender;
+import reactor.kafka.sender.SenderRecord;
+import reactor.kafka.sender.SenderResult;
 
 @Component
 @RequiredArgsConstructor
 public class KafkaProducer {
 
-    private final static String topic = "2z2j7jw9-default";
+    private final KafkaSender<String, String> kafkaSender;
 
-    private final KafkaTemplate<String, String> kafkaSender;
-
-    Mono<SendResult<String, String>> send(String msg) {
-        return Mono.fromFuture(kafkaSender.send(topic, msg).completable());
+    Flux<SenderResult<Void>> send(Mono<SenderRecord<String, String, Void>> msg) {
+        return kafkaSender.send(msg);
     }
 }

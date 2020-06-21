@@ -47,7 +47,7 @@ public class CreateClientOperation {
                 var sendEventMono = clientIdMono
                     .map(id -> new Event("ClientCreated", id))
                     .flatMap(kafkaAdapter::sendEvent);
-                return Mono.when(attachPhotosMono)
+                return Mono.when(attachPhotosMono, sendEventMono)
                     .then(clientIdMono);
             }
         ).as(logProcess(log, "CreateClientOperation", request));

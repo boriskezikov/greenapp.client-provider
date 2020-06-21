@@ -16,7 +16,6 @@ kafka:
     "[client.id]": 2z2j7jw9-producer
     "[acks]": all
     "[delivery.timeout.ms]": 90000
-    "[enable.idempotence]": true
     "[batch.size]": 10240
     "[linger.ms]": 100
     "[security.protocol]": SASL_SSL

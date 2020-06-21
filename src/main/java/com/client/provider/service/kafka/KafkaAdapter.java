@@ -19,15 +19,16 @@ import static com.client.provider.exception.InvocationError.KAFKA_INVOCATION_ERR
 public class KafkaAdapter {
 
     private final static Logger log = LoggerFactory.getLogger(KafkaAdapter.class);
-    private final static String topic = "2z2j7jw9-task-event";
+    private final static String topic = "2z2j7jw9-client-event";
 
     private final KafkaProducer producer;
 
     public Mono<Void> sendEvent(Event event) {
-        return producer.send(event.toString())
+        var message = senderRecord(event);
+        return producer.send(message)
             .retryWhen(Retry.backoff(5, Duration.ofMillis(100)))
             .doOnSubscribe(i -> log.info("KafkaAdapter.sendEvent.in event = {}", event))
-            .doOnSuccess(r -> log.info("KafkaAdapter.sendEvent.out"))
+            .doOnComplete(() -> log.info("KafkaAdapter.sendEvent.out"))
             .onErrorMap(KAFKA_INVOCATION_ERROR::exception)
             .then();
     }

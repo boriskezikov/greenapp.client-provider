@@ -7,9 +7,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.core.DefaultKafkaProducerFactory;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.core.ProducerFactory;
 import reactor.kafka.sender.KafkaSender;
 import reactor.kafka.sender.SenderOptions;
 
@@ -33,19 +30,6 @@ public class KafkaConfiguration {
             .withValueSerializer(new StringSerializer())
             .withKeySerializer(new StringSerializer());
         return KafkaSender.create(producerOptions);
-    }
-
-    @Bean
-    public KafkaTemplate<String, String> kafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory());
-    }
-
-    @Bean
-    public ProducerFactory<String, String> producerFactory() {
-        var factory = new DefaultKafkaProducerFactory<String, String>(kafkaProperties().properties);
-        factory.setKeySerializer(new StringSerializer());
-        factory.setValueSerializer(new StringSerializer());
-        return factory;
     }
 
     @Setter
