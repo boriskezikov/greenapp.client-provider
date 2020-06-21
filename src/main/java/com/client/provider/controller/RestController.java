@@ -80,7 +80,7 @@ public class RestController {
             });
         return request.map(a -> new CreateClientRequest(client, a))
             .flatMap(createClientOperation::process)
-            .doOnSubscribe(s -> log.info("RestController.createClient.in client = {}, attachments = {}", client, request))
+            .doOnSubscribe(s -> log.info("RestController.createClient.in client = {}", client))
             .doOnSuccess(s -> log.info("RestController.createClient.out"));
     }
 
@@ -102,7 +102,7 @@ public class RestController {
             });
         return request.map(a -> new EditClientRequest(client, a, detach))
             .flatMap(editClientOperation::process)
-            .doOnSubscribe(s -> log.info("RestController.editClient.in client = {}, attachments = {}", request, client))
+            .doOnSubscribe(s -> log.info("RestController.editClient.in client = {}", client))
             .doOnSuccess(s -> log.info("RestController.editClient.out"));
     }
 
