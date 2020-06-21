@@ -6,8 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Builder
 @ToString
@@ -19,7 +19,7 @@ public class Client {
     public final String login;
     public final String name;
     public final String surname;
-    public final LocalDateTime birthDate;
+    public final LocalDate birthDate;
     public final String description;
     public final Type type;
     public final LocalDateTime updated;
@@ -33,7 +33,7 @@ public class Client {
             .surname(row.get("surname", String.class))
             .description(row.get("description", String.class))
             .type(Type.valueOf(row.get("type", String.class)))
-            .birthDate(row.get("birth_date", LocalDateTime.class))
+            .birthDate(row.get("birth_date", LocalDate.class))
             .updated(row.get("updated", LocalDateTime.class))
             .created(row.get("created", LocalDateTime.class))
             .build();

@@ -4,11 +4,11 @@ spring:
   profiles:
     active: dev
 db:
-  host: ec2-52-44-166-58.compute-1.amazonaws.com
+  host: ec2-79-125-26-232.eu-west-1.compute.amazonaws.com
   port: 5432
-  database: d9gpt70d96ibeo
-  username: ivwpvmnbfnrity
-  password: 8b64f5b33535a1bd31f4872f4b7319c63543c6286399ad1183e88035abce8880
+  database: dcdiau51fbv8lp
+  username: rqesrgpikegrba
+  password: aef0a8af3cf50fd9e3afe9444f6a190126802b20e1d2771cd28413cfa7c34f5e
 kafka:
   properties:
     "[bootstrap.servers]": moped-01.srvs.cloudkafka.com:9094,moped-02.srvs.cloudkafka.com:9094,moped-03.srvs.cloudkafka.com:9094
