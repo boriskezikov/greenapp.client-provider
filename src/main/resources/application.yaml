@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: client-provider
+  profiles:
+    active: dev
+db:
+  host: ec2-52-44-166-58.compute-1.amazonaws.com
+  port: 5432
+  database: d9gpt70d96ibeo
+  username: ivwpvmnbfnrity
+  password: 8b64f5b33535a1bd31f4872f4b7319c63543c6286399ad1183e88035abce8880
+kafka:
+  properties:
+    "[bootstrap.servers]": moped-01.srvs.cloudkafka.com:9094,moped-02.srvs.cloudkafka.com:9094,moped-03.srvs.cloudkafka.com:9094
+    "[sasl.jaas.config]": org.apache.kafka.common.security.scram.ScramLoginModule required username="2z2j7jw9" password="gGBcXuQW6peGnHhInj9TE09n_d4IadbE";
+    "[client.id]": 2z2j7jw9-producer
+    "[acks]": all
+    "[delivery.timeout.ms]": 90000
+    "[enable.idempotence]": true
+    "[batch.size]": 10240
+    "[linger.ms]": 100
+    "[security.protocol]": SASL_SSL
+    "[sasl.mechanism]": SCRAM-SHA-256

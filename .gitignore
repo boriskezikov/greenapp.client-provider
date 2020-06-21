@@ -1,0 +1,4 @@
+/.idea/
+/target/
+/client-provider.iml
+/src/main/resources/application-dev.yaml
