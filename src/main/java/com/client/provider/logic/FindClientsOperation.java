@@ -1,6 +1,7 @@
 package com.client.provider.logic;
 
 import com.client.provider.model.Client;
+import com.client.provider.model.Type;
 import com.client.provider.service.dao.R2dbcAdapter;
 import io.r2dbc.client.Query;
 import lombok.RequiredArgsConstructor;
@@ -35,13 +36,15 @@ public class FindClientsOperation {
 
         public final String name;
         public final String surname;
+        public final Type type;
         public final String login;
         public final Long offset;
         public final Long limit;
 
-        public FindClientsRequest(String name, String surname, String login, Long offset, Long limit) {
+        public FindClientsRequest(String name, String surname, Type type, String login, Long offset, Long limit) {
             this.name = name;
             this.surname = surname;
+            this.type = type;
             this.login = login;
             this.offset = requireNonNullElse(offset, 0L);
             this.limit = requireNonNullElse(limit, 20L);
@@ -58,6 +61,9 @@ public class FindClientsOperation {
             }
             if (nonNull(login)) {
                 query.bind(format("$%s", pos), login);
+            }
+            if (nonNull(type)) {
+                query.bind(format("$%s", pos), type.toString());
             }
             return query;
         }
@@ -79,6 +85,9 @@ public class FindClientsOperation {
             }
             if (nonNull(login)) {
                 params.add(format("login = $%d", pos));
+            }
+            if (nonNull(type)) {
+                params.add(format("type = $%d::client_type", pos));
             }
 
             return params.toString()

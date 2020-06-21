@@ -10,6 +10,7 @@ import com.client.provider.logic.FindAttachmentsByClientIdOperation.FindAttachme
 import com.client.provider.logic.FindClientByIdOperation;
 import com.client.provider.logic.FindClientByIdOperation.FindClientByIdRequest;
 import com.client.provider.logic.FindClientsOperation;
+import com.client.provider.logic.FindClientsOperation.FindClientsRequest;
 import com.client.provider.model.Client;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -48,7 +49,7 @@ public class RestController {
     private final EditClientOperation editClientOperation;
 
     @PostMapping("/clients")
-    public Flux<Client> findClient(@Valid @RequestBody FindClientsOperation.FindClientsRequest request) {
+    public Flux<Client> findClients(@Valid @RequestBody(required = false) FindClientsRequest request) {
         return Mono.just(request)
             .flatMapMany(findClientsOperation::process)
             .doOnSubscribe(s -> log.info("RestController.findClients.in request = {}", request))
@@ -86,7 +87,7 @@ public class RestController {
     @PutMapping(value = "/client", params = "detach")
     public Mono<Void> editClient(@RequestPart("client") Client client,
                                  @RequestPart(value = "attachment", required = false) MultipartFile attachment,
-                                 @RequestParam(value = "detach") boolean detach) {
+                                 @RequestParam(value = "detach", required = false, defaultValue = "false") boolean detach) {
         var request = Mono.just(attachment)
             .flatMap(a -> {
                 try {

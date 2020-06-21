@@ -14,10 +14,9 @@ import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import static com.client.provider.exception.ApplicationError.CLIENT_NOT_FOUND_BY_ID;
 import static com.client.provider.utils.Utils.logProcess;
@@ -47,7 +46,7 @@ public class EditClientOperation {
                 var attach = request.attachPhotoRequest.asMono()
                     .flatMap(a -> r2dbcAdapter.attach(h, a));
                 var sendEvent = kafkaAdapter.sendEvent(new Event("ClientUpdated", id));
-                return Mono.when(updateClient, detach, attach, sendEvent);
+                return Mono.when(updateClient, detach, attach);
             }))
             .as(logProcess(log, "EditClientOperation", request));
     }
@@ -87,7 +86,7 @@ public class EditClientOperation {
             bind(query, "$2", String.class, newClient.surname);
             bind(query, "$3", String.class, newClient.login);
             bind(query, "$4", String.class, newClient.description);
-            bind(query, "$5", LocalDateTime.class, newClient.birthDate);
+            bind(query, "$5", LocalDate.class, newClient.birthDate);
             bind(query, "$6", Long.class, newClient.id);
             return query;
         }
