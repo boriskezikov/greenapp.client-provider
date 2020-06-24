@@ -13,9 +13,11 @@ import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static com.client.provider.exception.ValidationError.INVALID_ATTACH_REQUEST;
 import static com.client.provider.utils.Utils.logProcess;
@@ -36,7 +38,7 @@ public class CreateClientOperation {
             h -> {
                 var clientIdMono = r2dbcAdapter.insert(h, request).cache();
                 var attachPhotosMono = clientIdMono
-                    .flatMap(id -> request.attachPhotoRequest.asMono()
+                    .flatMapMany(id -> Flux.fromIterable(request.attachPhotoRequest)
                         .map(a -> {
                             a.setClientId(id);
                             return a;
@@ -58,7 +60,7 @@ public class CreateClientOperation {
     public static class CreateClientRequest extends Binder {
 
         public final Client newClient;
-        public final AttachPhotoRequest attachPhotoRequest;
+        public final List<AttachPhotoRequest> attachPhotoRequest;
 
         public Query bindOn(Query query) {
             bind(query, "$1", String.class, newClient.name);

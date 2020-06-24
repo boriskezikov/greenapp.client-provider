@@ -33,6 +33,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
+import java.util.List;
 import javax.validation.Valid;
 
 @org.springframework.web.bind.annotation.RestController
@@ -69,15 +70,15 @@ public class RestController {
             MediaType.MULTIPART_FORM_DATA_VALUE
         })
     public Mono<Long> createClient(@RequestPart("client") Client client,
-                                   @RequestPart(value = "attachment", required = false) MultipartFile attachment) {
-        var request = Mono.just(attachment)
+                                   @RequestPart(value = "attachment", required = false) List<MultipartFile> attachment) {
+        var request = Flux.fromIterable(attachment)
             .flatMap(a -> {
                 try {
                     return Mono.just(new AttachPhotoRequest(a.getContentType(), a.getSize(), a.getBytes()));
                 } catch (IOException e) {
                     return Mono.error(e);
                 }
-            });
+            }).collectList();
         return request.map(a -> new CreateClientRequest(client, a))
             .flatMap(createClientOperation::process)
             .doOnSubscribe(s -> log.info("RestController.createClient.in client = {}", client))
