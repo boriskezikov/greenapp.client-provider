@@ -44,6 +44,7 @@ public class KafkaAdapter {
 
         public final String value;
         public final Long taskId;
+
     }
 }
 
