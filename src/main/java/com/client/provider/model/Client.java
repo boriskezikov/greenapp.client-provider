@@ -1,8 +1,10 @@
 package com.client.provider.model;
 
 import io.r2dbc.spi.Row;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
@@ -11,8 +13,9 @@ import java.time.LocalDateTime;
 
 @Builder
 @ToString
+@Getter
 @EqualsAndHashCode(exclude = {"id", "updated", "created"})
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class Client {
 
     public final Long id;
@@ -21,6 +24,7 @@ public class Client {
     public final String surname;
     public final LocalDate birthDate;
     public final String description;
+    private Long attachmentId;
     public final Type type;
     public final LocalDateTime updated;
     public final LocalDateTime created;
@@ -46,6 +50,11 @@ public class Client {
             .surname(row.get("surname", String.class))
             .type(Type.valueOf(row.get("type", String.class)))
             .build();
+    }
+
+    public Client setAttachmentId(Long attachmentId) {
+        this.attachmentId = attachmentId;
+        return this;
     }
 
     @RequiredArgsConstructor

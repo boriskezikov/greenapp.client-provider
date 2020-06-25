@@ -3,6 +3,7 @@ package com.client.provider.service.dao;
 import com.client.provider.logic.CreateClientOperation.AttachPhotoRequest;
 import com.client.provider.logic.CreateClientOperation.CreateClientRequest;
 import com.client.provider.logic.EditClientOperation.UpdateClientRequest;
+import com.client.provider.logic.FindAttachmentByIdOperation.FindAttachmentsByIdRequest;
 import com.client.provider.logic.FindAttachmentsByClientIdOperation.FindAttachmentsByClientIdRequest;
 import com.client.provider.logic.FindClientByIdOperation.FindClientByIdRequest;
 import com.client.provider.logic.FindClientsOperation.FindClientsRequest;
@@ -28,9 +29,15 @@ public class R2dbcAdapter {
         return this.handler.withHandle(h -> {
             var sql = "SELECT id, name, surname, login, description, CAST(type AS VARCHAR), birth_date, updated, created " +
                 "FROM public.client WHERE id = $1";
-            return request.bindOn(h.createQuery(sql))
+            var client = request.bindOn(h.createQuery(sql))
                 .mapRow(Client::fromGetByIdRow)
                 .next();
+            sql = "SELECT id FROM public.attachment WHERE client_id = $1";
+            var attachmentId = request.bindOn(h.createQuery(sql))
+                .mapRow(r -> r.get("id", Long.class))
+                .next();
+            return client.zipWith(attachmentId)
+                .map(t -> t.getT1().setAttachmentId(t.getT2()));
         });
     }
 
@@ -42,6 +49,15 @@ public class R2dbcAdapter {
             );
             return request.bindOn(h.createQuery(sql))
                 .mapRow(Client::fromFindRow);
+        });
+    }
+
+    public Mono<Attachment> findAttachmentsById(FindAttachmentsByIdRequest request) {
+        return this.handler.withHandle(h -> {
+            var sql = "SELECT id, client_id, content, type, length FROM public.attachment WHERE id = $1";
+            return request.bindOn(h.createQuery(sql))
+                .mapRow(Attachment::fromRow)
+                .next();
         });
     }
 

@@ -5,6 +5,8 @@ import com.client.provider.logic.CreateClientOperation.AttachPhotoRequest;
 import com.client.provider.logic.CreateClientOperation.CreateClientRequest;
 import com.client.provider.logic.EditClientOperation;
 import com.client.provider.logic.EditClientOperation.EditClientRequest;
+import com.client.provider.logic.FindAttachmentByIdOperation;
+import com.client.provider.logic.FindAttachmentByIdOperation.FindAttachmentsByIdRequest;
 import com.client.provider.logic.FindAttachmentsByClientIdOperation;
 import com.client.provider.logic.FindAttachmentsByClientIdOperation.FindAttachmentsByClientIdRequest;
 import com.client.provider.logic.FindClientByIdOperation;
@@ -47,6 +49,7 @@ public class RestController {
     private final FindClientsOperation findClientsOperation;
     private final FindClientByIdOperation findClientByIdOperation;
     private final FindAttachmentsByClientIdOperation findAttachmentsByClientIdOperation;
+    private final FindAttachmentByIdOperation findAttachmentByIdOperation;
     private final EditClientOperation editClientOperation;
 
     @PostMapping("/clients")
@@ -126,5 +129,16 @@ public class RestController {
             })
             .doOnSubscribe(s -> log.info("RestController.findAttachments.in id = {}", id))
             .doOnSuccess(s -> log.info("RestController.findAttachments.out"));
+    }
+
+    @GetMapping(value = "/attachment/{id}",
+        produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE})
+    @ResponseBody
+    public Mono<byte[]> findAttachmentsById(@PathVariable(value = "id") Long id) {
+        return Mono.just(new FindAttachmentsByIdRequest(id))
+            .flatMap(findAttachmentByIdOperation::process)
+            .map(a -> a.content)
+            .doOnSubscribe(s -> log.info("RestController.findAttachmentsById.in id = {}", id))
+            .doOnSuccess(s -> log.info("RestController.findAttachmentsById.out"));
     }
 }
