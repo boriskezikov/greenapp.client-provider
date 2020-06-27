@@ -1,11 +1,12 @@
 package com.client.provider.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.r2dbc.spi.Row;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDate;
@@ -28,6 +29,27 @@ public class Client {
     public final Type type;
     public final LocalDateTime updated;
     public final LocalDateTime created;
+
+    @JsonCreator
+    public Client(@JsonProperty("id") Long id,
+                  @JsonProperty("login") String login,
+                  @JsonProperty("name") String name,
+                  @JsonProperty("surname") String surname,
+                  @JsonProperty("birthDate") LocalDate birthDate,
+                  @JsonProperty("description") String description,
+                  @JsonProperty("type") Type type,
+                  @JsonProperty("updated") LocalDateTime updated,
+                  @JsonProperty("created") LocalDateTime created) {
+        this.id = id;
+        this.login = login;
+        this.name = name;
+        this.surname = surname;
+        this.birthDate = birthDate;
+        this.description = description;
+        this.type = type;
+        this.updated = updated;
+        this.created = created;
+    }
 
     public static Client fromGetByIdRow(Row row) {
         return Client.builder()
@@ -57,7 +79,6 @@ public class Client {
         return this;
     }
 
-    @RequiredArgsConstructor
     @Builder
     @EqualsAndHashCode(of = "content")
     public static class Attachment {
@@ -67,6 +88,18 @@ public class Client {
         public final Long contentLength;
         public final String contentType;
         public final byte[] content;
+
+        public Attachment(@JsonProperty("id") Long id,
+                          @JsonProperty("clientId") Long clientId,
+                          @JsonProperty("contentLength") Long contentLength,
+                          @JsonProperty("contentType") String contentType,
+                          @JsonProperty("content") byte[] content) {
+            this.id = id;
+            this.clientId = clientId;
+            this.contentLength = contentLength;
+            this.contentType = contentType;
+            this.content = content;
+        }
 
         public static Attachment fromRow(Row row) {
             return Attachment.builder()

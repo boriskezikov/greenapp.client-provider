@@ -1,6 +1,8 @@
 package com.client.provider.service.kafka;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.ToString;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
@@ -22,6 +24,7 @@ public class KafkaAdapter {
     private final static String topic = "2z2j7jw9-client-event";
 
     private final KafkaProducer producer;
+    private final ObjectMapper objectMapper;
 
     public Mono<Void> sendEvent(Event event) {
         var message = senderRecord(event);
@@ -33,8 +36,9 @@ public class KafkaAdapter {
             .then();
     }
 
+    @SneakyThrows
     private Mono<SenderRecord<String, String, Void>> senderRecord(Event event) {
-        var record = new ProducerRecord<String, String>(topic, event.toString());
+        var record = new ProducerRecord<String, String>(topic, objectMapper.writeValueAsString(event));
         return Mono.just(SenderRecord.create(record, null));
     }
 
@@ -44,7 +48,6 @@ public class KafkaAdapter {
 
         public final String value;
         public final Long taskId;
-
     }
 }
 
