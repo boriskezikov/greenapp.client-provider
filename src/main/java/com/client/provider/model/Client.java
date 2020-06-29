@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -77,6 +78,10 @@ public class Client {
     public Client setAttachmentId(Long attachmentId) {
         this.attachmentId = attachmentId;
         return this;
+    }
+
+    public Mono<Client> asMono() {
+        return Mono.just(this);
     }
 
     @Builder

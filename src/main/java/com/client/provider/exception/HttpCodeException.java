@@ -1,25 +1,26 @@
 package com.client.provider.exception;
 
-import io.netty.handler.codec.http.HttpResponseStatus;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
-public class HttpCodeException extends RuntimeException {
+public class HttpCodeException extends ResponseStatusException {
 
-    public final HttpResponseStatus status;
+    public final HttpStatus status;
     public final String body;
 
     public HttpCodeException(int status, String description) {
-        this(HttpResponseStatus.valueOf(status), description);
+        this(HttpStatus.valueOf(status), description);
     }
 
-    public HttpCodeException(HttpResponseStatus status, String body) {
-        super(body);
+    public HttpCodeException(HttpStatus status, String body) {
+        super(status, body);
         this.status = status;
         this.body = body;
     }
 
     public HttpCodeException(Throwable cause, int status, String body) {
-        super(cause);
-        this.status = HttpResponseStatus.valueOf(status);
+        super(HttpStatus.valueOf(status), null, cause);
+        this.status = HttpStatus.valueOf(status);
         this.body = body;
     }
 

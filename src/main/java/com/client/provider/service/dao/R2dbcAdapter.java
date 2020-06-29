@@ -36,8 +36,8 @@ public class R2dbcAdapter {
             var attachmentId = request.bindOn(h.createQuery(sql))
                 .mapRow(r -> r.get("id", Long.class))
                 .next();
-            return client.zipWith(attachmentId)
-                .map(t -> t.getT1().setAttachmentId(t.getT2()));
+            return client.flatMap(c -> attachmentId.map(c::setAttachmentId)
+                .switchIfEmpty(c.asMono()));
         });
     }
 
